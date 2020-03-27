@@ -2,7 +2,7 @@
 
 Auto-trigger docker build for [kubernetes helm](https://github.com/kubernetes/helm) when new release is announced.
 
-[![DockerHub Badge](http://dockeri.co/image/alpine/helm)](https://hub.docker.com/r/renaultdigital/helm/)
+[![DockerHub Badge](http://dockeri.co/image/renaultdigital/helm)](https://hub.docker.com/r/renaultdigital/helm/)
 
 ## NOTES
 
