@@ -35,7 +35,7 @@ build() {
   fi
 }
 
-image="alpine/helm"
+image="renaultdigital/helm"
 repo="helm/helm"
 
 if [[ ${CI} == 'true' ]]; then
