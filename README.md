@@ -1,5 +1,7 @@
 # kubernetes helm
 
+[![Build Status](https://travis-ci.com/renault-digital/docker-helm.svg?branch=master)](https://travis-ci.com/renault-digital/docker-helm)
+
 Auto-trigger docker build for [kubernetes helm](https://github.com/kubernetes/helm) when new release is announced.
 
 [![DockerHub Badge](http://dockeri.co/image/renaultdigital/helm)](https://hub.docker.com/r/renaultdigital/helm/)
