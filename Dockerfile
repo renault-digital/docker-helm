@@ -5,12 +5,10 @@ FROM alpine:3
 
 ARG VERSION
 
-# https://get.helm.sh/helm-v3.2.1-linux-amd64.tar.gz
 ENV BASE_URL="https://get.helm.sh"
-ENV TAR_FILE="helm-${VERSION}-linux-amd64.tar.gz"
+ENV TAR_FILE="helm-v${VERSION}-linux-amd64.tar.gz"
 
 RUN apk add --update --no-cache git curl ca-certificates && \
-    echo ${BASE_URL}/${TAR_FILE} && \
     curl -L ${BASE_URL}/${TAR_FILE} | tar xvz && \
     mv linux-amd64/helm /usr/bin/helm && \
     chmod +x /usr/bin/helm && \
