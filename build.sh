@@ -46,9 +46,9 @@ done
 echo "Get latest version based on the latest Github release"
 
 if [[ ${CI} == 'true' ]]; then
-  latest=$(curl -sL -H "Authorization: token ${API_TOKEN}"  https://api.github.com/repos/${REPOSITORY}/releases/latest | jq -r ".tag_name" | cut -c 2-)
+  latest=$(curl -sL -H "Authorization: token ${API_TOKEN}"  https://api.github.com/repos/${REPOSITORY}/releases/latest | jq -r ".tag_name")
 else
-  latest=$(curl -sL https://api.github.com/repos/${REPOSITORY}/releases/latest | jq -r ".tag_name" | cut -c 2-)
+  latest=$(curl -sL https://api.github.com/repos/${REPOSITORY}/releases/latest | jq -r ".tag_name")
 fi
 
 echo "Latest version found is ${latest}"
