@@ -6,7 +6,7 @@
 # DOCKER_PASSWORD
 # API_TOKEN
 
-set -ex
+set -e
 
 image="renaultdigital/helm"
 repo="helm/helm"
@@ -17,7 +17,7 @@ build() {
 
   # run test
   version=$(docker run -ti --rm ${image}:"${tag}" version)
-  #Version:2.0.2 Commit:25c70cb9767b35d3cb97e39194a201e524fc26f7
+  #version.BuildInfo{Version:"v3.0.0-beta.2", GitCommit:"26c7338408f8db593f93cd7c963ad56f67f662d4", GitTreeState:"clean", GoVersion:"go1.12.9"}
 
   version=$(echo "${version}"| cut -d"\"" -f2 | cut -d"\"" -f1)
 
