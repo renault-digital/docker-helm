@@ -12,7 +12,10 @@ The latest docker tag is the latest release version (https://github.com/helm/hel
 
 Please avoid to use `latest` tag for any production deployment. Tag with right version is the proper way, such as `renaultdigital/helm:3.1.1`
 
-Same image as [alpine-docker](https://github.com/alpine-docker/helm) with curl (for push).
+Same image as [alpine-docker](https://github.com/alpine-docker/helm) with:
+
+- `curl`
+- `helm-push`
 
 ### Github Repo
 
@@ -64,6 +67,13 @@ Mostly it is used during CI/CD (continuous integration and continuous delivery) 
 * Match the exist docker image tags via Hub.docker.io REST API
 * If not matched, build the image with release version and push to https://hub.docker.com/
 * Get the latest version from https://github.com/helm/helm/releases/latest, pull the image with that version, tag as `renaultdigital/helm:latest` and push to hub.docker.com
+
+# Contribution
+
+Before any contribution, test your code :
+
+- using our testing script: `.githooks/pre-commit`
+- by registering our githooks: `git config --local core.hooksPath .githooks/`
 
 # Credits
 
