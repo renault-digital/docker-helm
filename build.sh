@@ -39,7 +39,7 @@ do
   echo "$status"
 
   if [[ "${status}" =~ "not found" ]]; then
-    build "$tag"
+    echo build "$tag"
   fi
 done
 
@@ -53,18 +53,21 @@ fi
 
 echo "Latest version found is ${latest}"
 
-digest=$(curl -sL https://hub.docker.com/v2/repositories/${IMAGE}/tags/"${latest}" | jq -r ".images[].digest" )
+digest=$(curl -sL https://hub.docker.com/v2/repositories/${IMAGE}/tags/"${latest}")
 digest_latest=$(curl -sL https://hub.docker.com/v2/repositories/${IMAGE}/tags/latest)
 
-if [  "$(echo "$digest_latest" | jq -r ".message")" != "tag 'latest' not found" ]; then
-  echo "Latest found remotely"
+if [  "$(echo "$digest" | jq -r ".message")" != "tag 'latest' not found" ]; then
+  echo "Tag found remotely"
 
-  if [ "$(echo digest_latest | jq -r ".images[].digest")" == "${digest}" ]; then
-    echo "Remote digest is equal to local digest, update is unnecessary"
-    exit 0
+  if [  "$(echo "$digest_latest" | jq -r ".message")" != "tag 'latest' not found" ]; then
+    echo "Latest found remotely"
+
+    if [ "$(echo digest_latest | jq -r ".images[].digest")" == "${digest}" ]; then
+      echo "Remote digest is equal to local digest, update is unnecessary"
+      exit 0
+    fi
   fi
 fi
-
 
 if [[ "$TRAVIS_BRANCH" == "master" && "$TRAVIS_PULL_REQUEST" == false ]]; then
   echo "Update latest image to ${latest}"
