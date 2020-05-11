@@ -37,6 +37,7 @@ do
   echo "$tag"
   status=$(curl -sL https://hub.docker.com/v2/repositories/${IMAGE}/tags/"${tag}")
   echo "$status"
+
   if [[ "${status}" =~ "not found" ]]; then
     build "$tag"
   fi
@@ -45,22 +46,33 @@ done
 echo "Get latest version based on the latest Github release"
 
 if [[ ${CI} == 'true' ]]; then
-  latest=$(curl -sL -H "Authorization: token ${API_TOKEN}"  https://api.github.com/repos/${REPOSITORY}/releases/latest |jq -r ".tag_name"| cut -c 2-)
+  latest=$(curl -sL -H "Authorization: token ${API_TOKEN}"  https://api.github.com/repos/${REPOSITORY}/releases/latest | jq -r ".tag_name" | cut -c 2-)
 else
-  latest=$(curl -sL https://api.github.com/repos/${REPOSITORY}/releases/latest |jq -r ".tag_name"| cut -c 2-)
+  latest=$(curl -sL https://api.github.com/repos/${REPOSITORY}/releases/latest | jq -r ".tag_name" | cut -c 2-)
 fi
+
+echo "Latest version found is ${latest}"
 
 digest=$(curl -sL https://hub.docker.com/v2/repositories/${IMAGE}/tags/"${latest}" | jq -r ".images[].digest" )
-digest_latest=$(curl -sL https://hub.docker.com/v2/repositories/${IMAGE}/tags/latest | jq -r ".images[].digest" )
+digest_latest=$(curl -sL https://hub.docker.com/v2/repositories/${IMAGE}/tags/latest)
 
-if [ "${digest_latest}" != "${digest}" ]; then
-  echo "Update latest image to ${latest}"
-  if [[ "$TRAVIS_BRANCH" == "master" && "$TRAVIS_PULL_REQUEST" == false ]]; then
-    docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
-    docker pull ${IMAGE}:"${latest}"
-    docker tag ${IMAGE}:"${latest}" ${IMAGE}:latest
-    docker push ${IMAGE}:latest
+if [  "$(echo "$digest_latest" | jq -r ".message")" != "tag 'latest' not found" ]; then
+  echo "Latest found remotely"
+
+  if [ "$(echo digest_latest | jq -r ".images[].digest")" == "${digest}" ]; then
+    echo "Remote digest is equal to local digest, update is unnecessary"
+    exit 0
   fi
-else
-  echo "Nothing to do !"
 fi
+
+
+if [[ "$TRAVIS_BRANCH" == "master" && "$TRAVIS_PULL_REQUEST" == false ]]; then
+  echo "Update latest image to ${latest}"
+
+  docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+  docker pull ${IMAGE}:"${latest}"
+  docker tag ${IMAGE}:"${latest}" ${IMAGE}:latest
+  docker push ${IMAGE}:latest
+fi
+
+echo "Done."
