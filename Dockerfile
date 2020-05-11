@@ -6,7 +6,7 @@ FROM alpine:3
 ARG VERSION
 
 ENV BASE_URL="https://get.helm.sh"
-ENV TAR_FILE="helm-v${VERSION}-linux-amd64.tar.gz"
+ENV TAR_FILE="helm-${VERSION}-linux-amd64.tar.gz"
 
 RUN apk add --update --no-cache git curl ca-certificates && \
     curl -L ${BASE_URL}/${TAR_FILE} | tar xvz && \
@@ -15,6 +15,8 @@ RUN apk add --update --no-cache git curl ca-certificates && \
     rm -rf linux-amd64 && \
     rm -f /var/cache/apk/*
 
+RUN echo $VERSION
+RUN if [[ $(echo $VERSION | cut -d '.' -f 1) == "v2" ]]; then helm init --client-only; fi
 RUN helm plugin install https://github.com/chartmuseum/helm-push.git
 
 WORKDIR /apps
