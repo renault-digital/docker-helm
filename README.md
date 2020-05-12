@@ -15,7 +15,8 @@ Please avoid to use `latest` tag for any production deployment. Tag with right v
 Same image as [alpine-docker](https://github.com/alpine-docker/helm) with:
 
 - `curl`
-- `helm-push`
+- `helm-push`: latest
+- `yq`: v3.3.0
 
 ### Github Repo
 

@@ -10,12 +10,15 @@ set -e
 
 IMAGE="renaultdigital/helm"
 REPOSITORY="helm/helm"
+YQ_VERSION="3.3.0"
 
 build() {
   tag=$1
 
   echo "Found new version, building the image ${IMAGE}:${tag}"
-  docker build --no-cache --build-arg VERSION="${tag}" -t ${IMAGE}:"${tag}" .
+
+  HELM_VERSION=$(echo "$tag" | cut -c2-)
+  docker build --no-cache --build-arg HELM_VERSION="${HELM_VERSION}" --build-arg YQ_VERSION="${YQ_VERSION}" -t ${IMAGE}:"${tag}" .
 
   if [[ "$TRAVIS_BRANCH" == "master" ]]; then
     docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
@@ -51,19 +54,21 @@ else
   latest=$(curl -sL https://api.github.com/repos/${REPOSITORY}/releases/latest | jq -r ".tag_name")
 fi
 
-echo "Latest version found is ${latest}"
+echo "Latest version for image ${IMAGE} is ${latest}"
 
 digest=$(curl -sL https://hub.docker.com/v2/repositories/${IMAGE}/tags/"${latest}")
 digest_latest=$(curl -sL https://hub.docker.com/v2/repositories/${IMAGE}/tags/latest)
 
-if [  "$(echo "$digest" | jq -r ".message")" != "tag 'latest' not found" ]; then
-  echo "Tag found remotely"
+if [  "$(echo "$digest" | jq -r ".message")" == "null" ]; then
+  digest=$(echo "$digest" | jq -r ".images[].digest")
+  echo "Tag found remotely with digest ${digest}"
 
-  if [  "$(echo "$digest_latest" | jq -r ".message")" != "tag 'latest' not found" ]; then
-    echo "Latest found remotely"
+  if [  "$(echo "$digest_latest" | jq -r ".message")" == "null" ]; then
+    digest_latest=$(echo "$digest_latest" | jq -r ".images[].digest")
+    echo "Latest found remotely with digest ${digest_latest}"
 
-    if [ "$(echo digest_latest | jq -r ".images[].digest")" == "${digest}" ]; then
-      echo "Remote digest is equal to local digest, update is unnecessary"
+    if [ "${digest_latest}" == "${digest}" ]; then
+      echo "Latest digest is equal to latest tag digest, update is unnecessary"
       exit 0
     fi
   fi
