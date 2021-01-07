@@ -4,7 +4,7 @@ FROM alpine:3
 # docker build --no-cache --build-arg HELM_VERSION=3.2.1 --build-arg YQ_VERSION=3.3.0 -t renaultdigital/helm:2.12.0 .
 
 ARG HELM_VERSION=3.2.1
-ARG YQ_VERSION=3.3.0
+ARG YQ_VERSION=v4.2.1
 
 ENV HELM_SOURCE="https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz"
 ENV YQ_SOURCE="https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64"
