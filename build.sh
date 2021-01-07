@@ -10,7 +10,7 @@ set -e
 
 IMAGE="renaultdigital/helm"
 REPOSITORY="helm/helm"
-YQ_VERSION="3.3.0"
+YQ_VERSION="v4.2.1"
 
 build() {
   tag=$1
