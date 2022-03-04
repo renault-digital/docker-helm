@@ -1,6 +1,8 @@
 # kubernetes helm
 
-[![Build Status](https://travis-ci.com/renault-digital/docker-helm.svg?branch=master)](https://travis-ci.com/renault-digital/docker-helm)
+
+![Docker Image CI Push](https://github.com/renault-digital/docker-helm/workflows/Docker%20Image%20CI%20Push/badge.svg)
+![Docker Image Trivy](https://github.com/renault-digital/docker-helm/workflows/Docker%20Image%20Trivy/badge.svg)
 
 Auto-trigger docker build for [kubernetes helm](https://github.com/kubernetes/helm) when new release is announced.
 
